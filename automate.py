@@ -3,9 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 
 def download_file(url, save_path, link_text=None, prefix=None):
-    """
-    Download a file from a url and save it to 'save_path'.
-    """
 
     try:
         """
@@ -15,9 +12,6 @@ def download_file(url, save_path, link_text=None, prefix=None):
         res = requests.get(url, stream=True, timeout=10)
         res.raise_for_status()
 
-        """
-        This part is trying to figure out what to name the downloaded file.
-        """
         # uses the link's visible text as the filename, e.g. <a>Booking</a> would use 'Booking'
         base_filename = link_text.strip()
 
@@ -54,10 +48,9 @@ def main():
     SITE_DOMAIN = ''     # e.g. 'https://www.example.com' - used to fix relative links
     SAVE_DIR = ''         #fill in the directory the files should be saved to
 
-    req = requests.get(PAGE_URL) #fill in the url of the web page
+    req = requests.get(PAGE_URL)
     print(req.status_code)
 
-    #converts HTML into a searchable object. 'html.parser' is the built-in parser.
     soup = BeautifulSoup(req.text, 'html.parser')
 
     #find the specific content you want to extract
