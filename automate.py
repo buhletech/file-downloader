@@ -5,11 +5,7 @@ from bs4 import BeautifulSoup
 def download_file(url, save_path, link_text=None, prefix=None):
 
     try:
-        """
-        'stream' downloads file in chunks instead of loading the whole thing into memory at once...
-        imporant for big files like PDFs
-        """
-        res = requests.get(url, stream=True, timeout=10)
+        res = requests.get(url, timeout=10)
         res.raise_for_status()
 
         # uses the link's visible text as the filename, e.g. <a>Booking</a> would use 'Booking'
@@ -32,9 +28,8 @@ def download_file(url, save_path, link_text=None, prefix=None):
         print(f"Downloading {url} to {filepath}")
 
         with open(filepath, 'wb') as f:
-            #write the file to disk in small pieces instead of holding the whole thing in memory
-            for chunk in res.iter_content(chunk_size=8192):
-                f.write(chunk)
+            f.write(res.content)
+            
         print(f"File downloaded to {filepath}")
 
     except Exception as e:
