@@ -36,13 +36,13 @@ def download_file(url, save_path, link_text=None, prefix=None):
 
 
 def main():
-    PAGE_URL = ''       # the page to scrape
+    page_url = ''       # the page to scrape
     CLASS = ''       # class of the (<div>/<span>, etc.) containing the document links
-    PREFIX_CLASS = ''  # class of the tag holding a descriptive prefix (e.g. a <span>)
-    SITE_DOMAIN = ''     # e.g. 'https://www.example.com' - used to fix relative links
-    DIR = ''         #fill in the directory the files should be saved to
+    prefix_class = ''  # class of the tag holding a descriptive prefix (e.g. a <span>)
+    site_domain = ''     # e.g. 'https://www.example.com' - used to fix relative links
+    sav_dir = ''         #fill in the directory the files should be saved to
 
-    req = requests.get(PAGE_URL)
+    req = requests.get(page_url)
     print(req.status_code)
 
     soup = BeautifulSoup(req.text, 'html.parser')
@@ -51,19 +51,19 @@ def main():
     content = soup.find('div', class_=CLASS)
 
     #looking for the header
-    title_tag = content.find('span', class_=PREFIX_CLASS)
+    title_tag = content.find('span', class_=prefix_class)
     PREFIX = title_tag.get_text().strip()
     print(f"Prefix used: {PREFIX}")
 
-    os.makedirs(DIR, exist_ok=True)
+    os.makedirs(sav_dir, exist_ok=True)
 
     for link in content.find_all('a', href=True):
         file_url = link['href']
         if not file_url.startswith('http'):
             #e.g. file_url=f'https://www.example{file_url}'
-            file_url = f'{SITE_DOMAIN}{file_url}'
+            file_url = f'{site_domain}{file_url}'
 
-        download_file(file_url, DIR, link.get_text(), prefix=PREFIX)
+        download_file(file_url, sav_dir, link.get_text(), prefix=PREFIX)
 
 if __name__ == '__main__':
     main()
